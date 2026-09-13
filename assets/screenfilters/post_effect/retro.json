@@ -1,0 +1,29 @@
+{
+  "targets": {
+    "temp": {}
+  },
+  "passes": [
+    {
+      "vertex_shader": "screenfilters:core/screenquad",
+      "fragment_shader": "screenfilters:post/retro",
+      "inputs": [
+        {
+          "sampler_name": "In",
+          "target": "minecraft:main"
+        }
+      ],
+      "output": "temp"
+    },
+    {
+      "vertex_shader": "screenfilters:core/screenquad",
+      "fragment_shader": "screenfilters:core/clone",
+      "inputs": [
+        {
+          "sampler_name": "In",
+          "target": "temp"
+        }
+      ],
+      "output": "minecraft:main"
+    }
+  ]
+}

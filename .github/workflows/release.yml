@@ -1,0 +1,47 @@
+name: Screen Filters
+run-name: Screen Filters v${{ inputs.project_version }}
+on:
+  workflow_dispatch:
+    inputs:
+      project_version:
+        description: "Project version: (e.g. 26.1.0)"
+        required: true
+      minecraft_version:
+        description: "Supported MC version: (e.g. 26.1.2)"
+        required: true
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: check version
+        run: |
+          if git rev-parse --verify 'refs/tags/${{ inputs.project_version }}' >/dev/null 2>&1; then
+            echo 'Version ${{ inputs.project_version }} already exists!'
+            exit 1
+          fi
+      - name: replace version and hash
+        run: |
+          sed -i 's/PACK_VERSION/${{ inputs.project_version }}/g' pack.mcmeta
+          echo 'Replaced PACK_VERSION with '${{ inputs.project_version }}' successfully!'
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          sed -i "s/GIT_HASH/$calculatedSha/g" pack.mcmeta
+          echo "Replaced GIT_HASH with $calculatedSha successfully!"
+      - name: package resource pack
+        run: zip -r screenfilters.zip assets LICENSE.txt pack.mcmeta pack.png README.md
+      - uses: Kir-Antipov/mc-publish@v3
+        with:
+          name: Screen Filters v${{ inputs.project_version }} (for MC ${{ inputs.minecraft_version }}+)
+          version: ${{ inputs.project_version }}
+          files: |
+            screenfilters.zip
+          loaders: |
+            minecraft
+          game-versions: ">=${{ inputs.minecraft_version }}"
+          game-version-filter: none
+          modrinth-id: vDPYLaWr
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}

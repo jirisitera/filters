@@ -1,0 +1,15 @@
+{
+  "passes": [
+    {
+      "vertex_shader": "screenfilters:core/screenquad",
+      "fragment_shader": "screenfilters:post/noir",
+      "inputs": [
+        {
+          "sampler_name": "In",
+          "target": "minecraft:main"
+        }
+      ],
+      "output": "minecraft:main"
+    }
+  ]
+}
