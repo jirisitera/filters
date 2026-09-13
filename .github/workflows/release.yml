@@ -41,7 +41,7 @@ jobs:
             minecraft
           game-versions: ">=${{ inputs.minecraft_version }}"
           game-version-filter: none
-          modrinth-id: vDPYLaWr
+          modrinth-id: aOAtMIck
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-featured: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
